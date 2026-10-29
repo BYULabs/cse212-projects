@@ -47,5 +47,27 @@ public static class Arrays
         // Remember: Using comments in your program, write down your process for solving this problem
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
+
+        // Plan:
+        // 1. Rotating right by 'amount' means the last 'amount' items move to the front,
+        //    and everything else shifts over to make room.
+        //    Example: {1, 2, 3, 4, 5, 6, 7, 8, 9} rotated by 3 -> the last 3 items {7, 8, 9} go to the front.
+        // 2. Find where the tail section starts: startIndex = data.Count - amount.
+        // 3. Copy the tail section into a new list using GetRange(startIndex, amount).
+        // 4. Remove that tail section from the end of the original list using RemoveRange(startIndex, amount).
+        // 5. Insert the copied tail at the front of the original list using InsertRange(0, tail).
+        // 6. If amount equals data.Count, the tail is the whole list, so the list ends up unchanged (which is correct).
+
+        // Step 2: Find the index where the items to move begin
+        var startIndex = data.Count - amount;
+
+        // Step 3: Copy the last 'amount' items
+        var tail = data.GetRange(startIndex, amount);
+
+        // Step 4: Remove those items from the end of the list
+        data.RemoveRange(startIndex, amount);
+
+        // Step 5: Put them at the front of the list
+        data.InsertRange(0, tail);
     }
 }
