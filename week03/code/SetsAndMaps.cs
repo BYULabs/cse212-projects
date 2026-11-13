@@ -67,6 +67,22 @@ public static class SetsAndMaps
         {
             var fields = line.Split(",");
             // TODO Problem 2 - ADD YOUR CODE HERE
+            
+            // Ensure the line has enough columns to avoid an IndexOutOfRangeException
+            if (fields.Length > 3)
+            {
+                // Column 4 corresponds to index 3 in a 0-based array
+                var degree = fields[3].Trim();
+
+                if (degrees.ContainsKey(degree))
+                {
+                    degrees[degree]++;
+                }
+                else
+                {
+                    degrees[degree] = 1;
+                }
+            }
         }
 
         return degrees;
