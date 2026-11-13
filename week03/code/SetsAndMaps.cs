@@ -107,7 +107,50 @@ public static class SetsAndMaps
     public static bool IsAnagram(string word1, string word2)
     {
         // TODO Problem 3 - ADD YOUR CODE HERE
-        return false;
+        var letterCounts = new Dictionary<char, int>();
+
+        // Count all non-space letters in word1 (normalized to lowercase)
+        foreach (char c in word1.ToLower())
+        {
+            if (c == ' ')
+            {
+                continue;
+            }
+
+            if (letterCounts.ContainsKey(c))
+            {
+                letterCounts[c]++;
+            }
+            else
+            {
+                letterCounts[c] = 1;
+            }
+        }
+
+        // Subtract letter counts using word2
+        foreach (char c in word2.ToLower())
+        {
+            if (c == ' ')
+            {
+                continue;
+            }
+
+            if (!letterCounts.ContainsKey(c))
+            {
+                return false;
+            }
+
+            letterCounts[c]--;
+
+            // If the count drops to 0, remove the key so we can check letterCounts.Count == 0 at the end
+            if (letterCounts[c] == 0)
+            {
+                letterCounts.Remove(c);
+            }
+        }
+
+        // If the dictionary is empty, both words had the exact same letters and frequencies
+        return letterCounts.Count == 0;
     }
 
     /// <summary>
