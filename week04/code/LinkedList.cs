@@ -86,6 +86,19 @@ public class LinkedList : IEnumerable<int>
     public void RemoveTail()
     {
         // TODO Problem 2
+        // Case 1: The list is empty or has only one node.
+        // Resetting both pointers safely clears the list in either scenario.
+        if (_head == _tail)
+        {
+            _head = null;
+            _tail = null;
+        }
+        // Case 2: The list has multiple nodes, so only the tail needs to be updated.
+        else if (_tail is not null)
+        {
+            _tail.Prev!.Next = null; // Remove the forward reference from the second-to-last node
+            _tail = _tail.Prev;      // Move the tail pointer back to the second-to-last node
+        }
     }
 
     /// <summary>
