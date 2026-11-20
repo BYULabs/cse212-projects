@@ -143,6 +143,36 @@ public class LinkedList : IEnumerable<int>
     public void Remove(int value)
     {
         // TODO Problem 3
+        Node? curr = _head;
+
+        // Traverse the list from head to tail to find the first matching value
+        while (curr is not null)
+        {
+            if (curr.Data == value)
+            {
+                // Case 1: Match is at the front of the list
+                if (curr == _head)
+                {
+                    RemoveHead();
+                }
+                // Case 2: Match is at the end of the list
+                else if (curr == _tail)
+                {
+                    RemoveTail();
+                }
+                // Case 3: Match is in the middle; bypass the current node by linking its neighbors
+                else
+                {
+                    curr.Prev!.Next = curr.Next; // Point the previous node forward to the next node
+                    curr.Next!.Prev = curr.Prev; // Point the next node backward to the previous node
+                }
+
+                // Exit immediately after removing the first matching node
+                return;
+            }
+
+            curr = curr.Next;
+        }
     }
 
     /// <summary>
