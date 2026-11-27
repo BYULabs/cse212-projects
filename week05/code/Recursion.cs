@@ -15,7 +15,14 @@ public static class Recursion
     public static int SumSquaresRecursive(int n)
     {
         // TODO Start Problem 1
-        return 0;
+        // Base case: stop recursion when n is 0 or negative
+        if (n <= 0)
+        {
+            return 0;
+        }
+
+        // Recursive case: n^2 + sum of squares up to (n - 1)
+        return (n * n) + SumSquaresRecursive(n - 1);
     }
 
     /// <summary>
@@ -40,6 +47,20 @@ public static class Recursion
     public static void PermutationsChoose(List<string> results, string letters, int size, string word = "")
     {
         // TODO Start Problem 2
+        // Base case: the current word has reached the desired permutation length
+        if (word.Length == size)
+        {
+            results.Add(word);
+            return;
+        }
+
+        // Recursive case: pick each available letter, append it to 'word', 
+        // and recurse with that letter removed from the remaining pool
+        for (int i = 0; i < letters.Length; i++)
+        {
+            string remainingLetters = letters.Remove(i, 1);
+            PermutationsChoose(results, remainingLetters, size, word + letters[i]);
+        }
     }
 
     /// <summary>
@@ -97,9 +118,22 @@ public static class Recursion
             return 4;
 
         // TODO Start Problem 3
+        // Initialize the memoization dictionary on the first call
+        remember ??= new Dictionary<int, decimal>();
 
-        // Solve using recursion
-        decimal ways = CountWaysToClimb(s - 1) + CountWaysToClimb(s - 2) + CountWaysToClimb(s - 3);
+        // Check if the result for 's' has already been calculated
+        if (remember.ContainsKey(s))
+        {
+            return remember[s];
+        }
+
+        // Solve using recursion and pass 'remember' along
+        decimal ways = CountWaysToClimb(s - 1, remember) + 
+                    CountWaysToClimb(s - 2, remember) + 
+                    CountWaysToClimb(s - 3, remember);
+
+        // Store the computed result before returning
+        remember[s] = ways;
         return ways;
     }
 
@@ -119,6 +153,21 @@ public static class Recursion
     public static void WildcardBinary(string pattern, List<string> results)
     {
         // TODO Start Problem 4
+        int wildcardIndex = pattern.IndexOf('*');
+
+        // Base case: no '*' characters remain in the pattern
+        if (wildcardIndex == -1)
+        {
+            results.Add(pattern);
+            return;
+        }
+
+        // Recursive case: replace the first '*' with '0' and '1' and recurse on both
+        string prefix = pattern[..wildcardIndex];
+        string suffix = pattern[(wildcardIndex + 1)..];
+
+        WildcardBinary(prefix + "0" + suffix, results);
+        WildcardBinary(prefix + "1" + suffix, results);
     }
 
     /// <summary>
@@ -136,7 +185,31 @@ public static class Recursion
         // currPath.Add((1,2)); // Use this syntax to add to the current path
 
         // TODO Start Problem 5
-        // ADD CODE HERE
+        // Stop if the move is out of bounds, a wall, or already in currPath
+        if (!maze.IsValidMove(currPath, x, y))
+        {
+            return;
+        }
+
+        // Add the current square to the path
+        currPath.Add((x, y));
+
+        // Base case: check if we reached the end square
+        if (maze.IsEnd(x, y))
+        {
+            results.Add(currPath.AsString());
+        }
+        else
+        {
+            // Recursive case: explore right, left, down, and up
+            SolveMaze(results, maze, x + 1, y, currPath);
+            SolveMaze(results, maze, x - 1, y, currPath);
+            SolveMaze(results, maze, x, y + 1, currPath);
+            SolveMaze(results, maze, x, y - 1, currPath);
+        }
+
+        // Backtrack: remove the current square before returning so other paths can reuse it
+        currPath.RemoveAt(currPath.Count - 1);
 
         // results.Add(currPath.AsString()); // Use this to add your path to the results array keeping track of complete maze solutions when you find the solution.
     }
