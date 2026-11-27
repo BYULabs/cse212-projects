@@ -185,7 +185,31 @@ public static class Recursion
         // currPath.Add((1,2)); // Use this syntax to add to the current path
 
         // TODO Start Problem 5
-        // ADD CODE HERE
+        // Stop if the move is out of bounds, a wall, or already in currPath
+        if (!maze.IsValidMove(currPath, x, y))
+        {
+            return;
+        }
+
+        // Add the current square to the path
+        currPath.Add((x, y));
+
+        // Base case: check if we reached the end square
+        if (maze.IsEnd(x, y))
+        {
+            results.Add(currPath.AsString());
+        }
+        else
+        {
+            // Recursive case: explore right, left, down, and up
+            SolveMaze(results, maze, x + 1, y, currPath);
+            SolveMaze(results, maze, x - 1, y, currPath);
+            SolveMaze(results, maze, x, y + 1, currPath);
+            SolveMaze(results, maze, x, y - 1, currPath);
+        }
+
+        // Backtrack: remove the current square before returning so other paths can reuse it
+        currPath.RemoveAt(currPath.Count - 1);
 
         // results.Add(currPath.AsString()); // Use this to add your path to the results array keeping track of complete maze solutions when you find the solution.
     }
