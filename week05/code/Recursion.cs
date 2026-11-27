@@ -153,6 +153,21 @@ public static class Recursion
     public static void WildcardBinary(string pattern, List<string> results)
     {
         // TODO Start Problem 4
+        int wildcardIndex = pattern.IndexOf('*');
+
+        // Base case: no '*' characters remain in the pattern
+        if (wildcardIndex == -1)
+        {
+            results.Add(pattern);
+            return;
+        }
+
+        // Recursive case: replace the first '*' with '0' and '1' and recurse on both
+        string prefix = pattern[..wildcardIndex];
+        string suffix = pattern[(wildcardIndex + 1)..];
+
+        WildcardBinary(prefix + "0" + suffix, results);
+        WildcardBinary(prefix + "1" + suffix, results);
     }
 
     /// <summary>
